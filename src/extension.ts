@@ -28,7 +28,7 @@ let stateLocation: string;
 let extensionPath = "";
 
 export function getExtensionPath(): string {
-	return extensionPath;
+    return extensionPath;
 }
 
 export function getStateLocation(): string {
@@ -38,14 +38,14 @@ export function getStateLocation(): string {
 export async function activate(context: vscode.ExtensionContext) {
 
     extensionPath = context.extensionPath;
-    
+
     await Utils.loadPackageInfo(context);
     stateLocation = path.join(os.homedir(), '.windup', 'tooling', 'vscode');
 
     console.log(`windup state location is: ${stateLocation}`);
 
     log(`App name: ${vscode.env.appName}`);
-     
+
     const out = path.join(stateLocation);
 
     const locations = await endpoints.getEndpoints(context);
@@ -57,7 +57,7 @@ export async function activate(context: vscode.ExtensionContext) {
     new RhamtView(context, modelService, configEditorService, markerService);
     new ReportView(context);
     detailsView = new IssueDetailsView(context, locations, modelService);
-    
+
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', async (data) => {
         if (data instanceof FileItem) {
             openFile(vscode.Uri.file(data.file));
@@ -97,7 +97,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     const newRulesetDisposable = vscode.commands.registerCommand('rhamt.newRuleset', async () => {
         new NewRulesetWizard(modelService).open();
-    }); 
+    });
     context.subscriptions.push(newRulesetDisposable);
     // const download = (!Private.isChe() && !Private.isVSCode());
 
@@ -105,6 +105,12 @@ export async function activate(context: vscode.ExtensionContext) {
     console.log(vscode.env.appName);
 
     vscode.window.registerWebviewPanelSerializer('rhamtConfigurationEditor', new ConfigurationEditorSerializer(modelService, configEditorService));
+
+    context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('quickfix', {
+        provideTextDocumentContent(uri) {
+            return `content of URI <b>${uri.toString()}</b>#${Math.random()}`;
+        }
+    }));
 }
 
 export async function openFile(uri: vscode.Uri): Promise<void> {
@@ -117,9 +123,9 @@ export async function openFile(uri: vscode.Uri): Promise<void> {
             vscode.window.showErrorMessage(e);
             return;
         }
-    } 
+    }
     else {
-        await vscode.window.showTextDocument(activeEditor.document, {viewColumn: activeEditor.viewColumn});
+        await vscode.window.showTextDocument(activeEditor.document, { viewColumn: activeEditor.viewColumn });
     }
 }
 

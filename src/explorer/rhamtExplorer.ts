@@ -125,6 +125,13 @@ export class RhamtExplorer {
                 vscode.window.showErrorMessage(`Error unactivating configuration ${e}`);
             }
         }));
+        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.kyma', async (item) => {
+            // console.log(item);
+            // vscode.window.showInformationMessage(`Yay! Kyma ${item}.`);
+            await vscode.commands.executeCommand('vscode.diff', vscode.Uri.parse('quickfix:foo'), vscode.Uri.parse('quickfix:bar'), 'Current ⟷ Quickfix', {
+                preview: true
+            });
+        }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {
             const config = item.config as RhamtConfiguration;
             try {
@@ -138,24 +145,24 @@ export class RhamtExplorer {
                         config.summary = undefined;
                         this.refreshConfigurations();
                     },
-                    () => {});
-                    if (config.cancelled) return;
-                    await AnalyzerUtil.loadAnalyzerResults(config);
-                        AnalyzerUtil.updateRunEnablement(true, this.dataProvider, config);
-                        const configNode = this.dataProvider.getConfigurationNode(config);
-                        configNode.loadResults();
-                        this.refreshConfigurations();
-                        this.dataProvider.reveal(configNode, true);
-                        this.markerService.refreshOpenEditors();
-                        this.saveModel();
-                        vscode.window.showInformationMessage('Analysis complete', 'Open Report').then(result => {
-                            if (result === 'Open Report') {
-                                vscode.commands.executeCommand('rhamt.openReportExternal', {
-                                    config,
-                                    getReport: () => config.getReport()
-                                });
-                            }
+                    () => { });
+                if (config.cancelled) return;
+                await AnalyzerUtil.loadAnalyzerResults(config);
+                AnalyzerUtil.updateRunEnablement(true, this.dataProvider, config);
+                const configNode = this.dataProvider.getConfigurationNode(config);
+                configNode.loadResults();
+                this.refreshConfigurations();
+                this.dataProvider.reveal(configNode, true);
+                this.markerService.refreshOpenEditors();
+                this.saveModel();
+                vscode.window.showInformationMessage('Analysis complete', 'Open Report').then(result => {
+                    if (result === 'Open Report') {
+                        vscode.commands.executeCommand('rhamt.openReportExternal', {
+                            config,
+                            getReport: () => config.getReport()
                         });
+                    }
+                });
 
             } catch (e) {
                 console.log(e);

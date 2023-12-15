@@ -156,6 +156,10 @@
                 "category": "MTA",
                 "command": "rhamt.deactivate",
                 "title": "Deactivate Analysis"
+            },
+            {
+                "command": "rhamt.kyma",
+                "title": "Run Kyma"
             }
         ],
         "configuration": [
@@ -237,6 +241,11 @@
                     "command": "rhamt.refreshResults",
                     "when": "view == rhamtExplorerView && viewItem =~ /rhamtConfiguration/i",
                     "group": "rhamt"
+                },
+                {
+                    "command": "rhamt.kyma",
+                    "when": "view == rhamtExplorerView && viewItem =~ /file/i",
+                    "group": "inline"
                 },
                 {
                     "command": "rhamt.openReportExternal",
