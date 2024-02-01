@@ -159,7 +159,7 @@
             },
             {
                 "command": "rhamt.kyma",
-                "title": "Run Kyma"
+                "title": "Generate Fix"
             }
         ],
         "configuration": [
@@ -244,7 +244,7 @@
                 },
                 {
                     "command": "rhamt.kyma",
-                    "when": "view == rhamtExplorerView && viewItem =~ /file/i",
+                    "when": "view == rhamtExplorerView && viewItem =~ /issue/i",
                     "group": "inline"
                 },
                 {
